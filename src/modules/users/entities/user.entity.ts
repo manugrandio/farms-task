@@ -16,4 +16,10 @@ export class User {
 
   @UpdateDateColumn()
   public updatedAt: Date;
+
+  @Column({ nullable: true })
+  public address?: string;
+
+  @Column("point", { nullable: true })
+  public coordinates?: string;
 }
