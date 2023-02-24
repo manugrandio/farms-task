@@ -43,10 +43,10 @@ describe("UsersController", () => {
 
       expect(res.statusCode).toBe(201);
       expect(res.body).toMatchObject({
-        id: expect.any(String),
+        id: expect.any(String), // eslint-disable-line @typescript-eslint/no-unsafe-assignment
         email: expect.stringContaining(createUserDto.email) as string,
-        createdAt: expect.any(String),
-        updatedAt: expect.any(String),
+        createdAt: expect.any(String), // eslint-disable-line @typescript-eslint/no-unsafe-assignment
+        updatedAt: expect.any(String), // eslint-disable-line @typescript-eslint/no-unsafe-assignment
       });
     });
 
