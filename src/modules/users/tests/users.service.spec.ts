@@ -34,11 +34,18 @@ describe("UsersController", () => {
   });
 
   describe(".createUser", () => {
-    const createUserDto: CreateUserDto = { email: "user@test.com", password: "password", address: "Test St. 12345", coordinates: [12.34, 56.78]};
+    const createUserDto: CreateUserDto = {
+      email: "user@test.com",
+      password: "password",
+      address: "Test St. 12345",
+      coordinates: "(12.34, 56.78)",
+    };
 
     it("should create new user", async () => {
       const createdUser = await usersService.createUser(createUserDto);
       expect(createdUser).toBeInstanceOf(User);
+      expect(createdUser.address).toEqual("Test St. 12345");
+      expect(createdUser.coordinates).toEqual("(12.34, 56.78)");
     });
 
     describe("with existing user", () => {

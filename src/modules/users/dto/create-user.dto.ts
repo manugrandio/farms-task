@@ -8,4 +8,10 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   public password: string;
+
+  @IsString()
+  public address?: string;
+
+  @IsString()
+  public coordinates?: string;
 }
