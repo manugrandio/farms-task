@@ -34,7 +34,7 @@ describe("UsersController", () => {
   });
 
   describe(".createUser", () => {
-    const createUserDto: CreateUserDto = { email: "user@test.com", password: "password" };
+    const createUserDto: CreateUserDto = { email: "user@test.com", password: "password", address: "Test St. 12345", coordinates: [12.34, 56.78]};
 
     it("should create new user", async () => {
       const createdUser = await usersService.createUser(createUserDto);
