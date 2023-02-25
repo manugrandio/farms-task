@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { User } from "../../users/entities/user.entity"
 
 export class CreateFarmDto {
   @IsString()
@@ -17,4 +18,7 @@ export class CreateFarmDto {
 
   @IsNumber()
   public cropYield?: number;
+
+  @IsString()
+  public user: User;
 }

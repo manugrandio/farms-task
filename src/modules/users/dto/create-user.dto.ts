@@ -1,4 +1,5 @@
-import { IsEmail, IsNotEmpty, IsString } from "class-validator";
+import { IsArray, IsEmail, IsNotEmpty, IsString } from "class-validator";
+import { Farm } from "../../farms/entities/farm.entity"
 
 export class CreateUserDto {
   @IsEmail()
@@ -14,4 +15,7 @@ export class CreateUserDto {
 
   @IsString()
   public coordinates?: string;
+
+  @IsArray()
+  public farms?: Farm[];
 }
