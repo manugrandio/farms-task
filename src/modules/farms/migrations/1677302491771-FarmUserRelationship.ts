@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
 export class FarmUserRelationship1677302491771 implements MigrationInterface {
-    name = 'FarmUserRelationship1677302491771'
+    public name = "FarmUserRelationship1677302491771"
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`ALTER TABLE "farm" ADD "userId" uuid`);

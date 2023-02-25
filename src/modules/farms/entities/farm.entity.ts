@@ -22,5 +22,5 @@ export class Farm {
   public cropYield?: number;
 
   @ManyToOne(() => User, (user) => user.farms)
-  user: User
+  public user: User
 }

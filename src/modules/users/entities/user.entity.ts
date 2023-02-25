@@ -25,5 +25,5 @@ export class User {
   public coordinates?: string;
 
   @OneToMany(() => Farm, (farm) => farm.user)
-  farms: Farm[]
+  public farms: Farm[]
 }
