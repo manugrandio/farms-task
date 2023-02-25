@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Farm } from "../../farms/entities/farm.entity"
 
 @Entity()
 export class User {
@@ -22,4 +23,7 @@ export class User {
 
   @Column("point", { nullable: true })
   public coordinates?: string;
+
+  @OneToMany(() => Farm, (farm) => farm.user)
+  farms: Farm[]
 }
