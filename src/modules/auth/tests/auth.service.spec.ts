@@ -1,10 +1,12 @@
 import config from "config/config";
 import { UnprocessableEntityError } from "errors/errors";
 import { Express } from "express";
+import { sign } from "jsonwebtoken";
 import { setupServer } from "server/server";
 import { disconnectAndClearDatabase } from "helpers/utils";
 import { CreateUserDto } from "modules/users/dto/create-user.dto";
 import { UsersService } from "modules/users/users.service";
+import { User } from "modules/users/entities/user.entity";
 import ds from "orm/orm.config";
 import { AuthService } from "../auth.service";
 import { LoginUserDto } from "../dto/login-user.dto";
@@ -62,6 +64,43 @@ describe("AuthService", () => {
         expect(error).toBeInstanceOf(UnprocessableEntityError);
         expect(error.message).toBe("Invalid user email or password");
       });
+    });
+  });
+
+  describe(".getUserFromToken", () => {
+    const loginDto: LoginUserDto = { email: "user@test.com", password: "password" };
+    const createUser = async (userDto: CreateUserDto) => usersService.createUser(userDto);
+
+    it("should return user if token is valid", async () => {
+      const user = await createUser(loginDto);
+      const validToken = sign(
+        {
+          id: user.id,
+          email: user.email,
+        },
+        config.JWT_SECRET,
+        { expiresIn: config.JWT_EXPIRES_AT },
+      );
+
+      const foundUser = await authService.getUserFromToken(validToken) as User;
+
+      expect(foundUser.id).toEqual(user.id);
+    });
+
+    it("should return null if token is invalid", async () => {
+      const user = await createUser(loginDto);
+      const invalidToken = sign(
+        {
+          id: user.id,
+          email: user.email,
+        },
+        "not-the-right-secret",
+        { expiresIn: config.JWT_EXPIRES_AT },
+      );
+
+      const foundUser = await authService.getUserFromToken(invalidToken);
+
+      expect(foundUser).toBeNull();
     });
   });
 });

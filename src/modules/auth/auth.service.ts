@@ -2,7 +2,8 @@ import * as bcrypt from "bcrypt";
 import config from "config/config";
 import { fromUnixTime } from "date-fns";
 import { UnprocessableEntityError } from "errors/errors";
-import { decode, sign } from "jsonwebtoken";
+import { decode, sign, verify } from "jsonwebtoken";
+import { User } from "modules/users/entities/user.entity";
 import { UsersService } from "modules/users/users.service";
 import { Repository } from "typeorm";
 import { LoginUserDto } from "./dto/login-user.dto";
@@ -44,6 +45,18 @@ export class AuthService {
     });
 
     return this.accessTokenRepository.save(newToken);
+  }
+
+  public async getUserFromToken(token: string): Promise<User | null> {
+    let userData;
+    try {
+      userData = verify(token, config.JWT_SECRET as string) as { id: string };
+    } catch {
+      return null;
+    }
+
+    const user = await this.usersService.findOneBy({ id: userData.id });
+    return user;
   }
 
   private getJwtTokenExpireDate(token: string): number {
