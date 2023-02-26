@@ -32,7 +32,6 @@ describe("FarmsService", () => {
       const createFarmDto: CreateFarmDto = {
         name: "Schrute Farms",
         address: "Test St. 12345",
-        coordinates: "(12.34, 56.78)",
         size: 10,
         cropYield: 200,
         user: user,
