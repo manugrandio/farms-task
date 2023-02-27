@@ -8,7 +8,7 @@ describe("Geocoding", () => {
 
       const coordinates = await geocodingService.getCoordinates(address);
 
-      expect(coordinates).toBe({ lat: 1, lng: 2 });
+      expect(coordinates).toBe({ latitude: 1, longitude: 2 });
     });
   });
 });

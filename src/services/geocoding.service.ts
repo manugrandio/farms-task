@@ -1,5 +1,6 @@
 import config from "config/config";
 import { CoordinatesDto } from "./coordinates.dto";
+import { CoordinatesPayload } from "./geocoding.interfaces";
 
 export class Geocoding {
   private readonly baseUrl = "https://api.distancematrix.ai/maps/api/geocode/json";
@@ -12,7 +13,7 @@ export class Geocoding {
     const url = `${this.baseUrl}?${queryParams}`;
     try {
       const response = await fetch(url);
-      const bodyJson = await response.json();
+      const bodyJson = await response.json() as CoordinatesPayload;
       return CoordinatesDto.createFromPayload(bodyJson);
     } catch {
       return null;
