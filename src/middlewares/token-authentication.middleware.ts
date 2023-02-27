@@ -9,11 +9,9 @@ export async function authenticateTokenMiddleware(req: Request, res: Response, n
     return res.sendStatus(401);
   }
 
-  let user;
   const authService = new AuthService();
-  try {
-    user = await authService.getUserFromToken(token);
-  } catch {
+  const user = await authService.getUserFromToken(token);
+  if (user === null) {
     return res.sendStatus(403);
   }
 
