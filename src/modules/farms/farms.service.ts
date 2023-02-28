@@ -42,7 +42,10 @@ export class FarmsService {
   }
 
   public async findFarms(): Promise<Farm[]> {
-    const farms = await this.farmsRepository.find({});
+    const farms = await this.farmsRepository
+      .createQueryBuilder("farm")
+      .leftJoinAndSelect("farm.user", "user")
+      .getMany()
     return farms;
   }
 }

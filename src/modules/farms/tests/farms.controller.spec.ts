@@ -195,12 +195,14 @@ describe("FarmsController", () => {
             address: "10 Daniels Rd, Honesdale, PA 18431",
             size: 10,
             cropYield: 200,
+            owner: "user@test.com",
           },
           {
             name: "Carrot Farms",
             address: "Test St. 1234",
             size: 20,
             cropYield: 500,
+            owner: "user@test.com",
           }
         ]
       });

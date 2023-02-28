@@ -1,5 +1,6 @@
 import { Exclude, Expose } from "class-transformer";
 import { Farm } from "../entities/farm.entity";
+import { User } from "modules/users/entities/user.entity";
 
 export class FarmDto {
   constructor(partial?: Partial<FarmDto>) {
@@ -13,10 +14,16 @@ export class FarmDto {
   public name: string;
 
   @Expose()
+  public owner: string;
+
+  @Expose()
   public address?: string;
 
   @Exclude()
   public coordinates?: string;
+
+  @Exclude()
+  public user: User;
 
   @Expose()
   public size?: number;
@@ -29,6 +36,6 @@ export class FarmDto {
       return null;
     }
 
-    return new FarmDto({ ...farm });
+    return new FarmDto({ ...farm, owner: farm.user.email });
   }
 }
