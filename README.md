@@ -1,3 +1,36 @@
+# Farms Task
+
+*Important*:
+
+- You can find the original contents of this README [below](#recruitment-node-private-1.2.0).
+- I moved the "Small Code Exercises" to a separate repo that you can find [here](https://github.com/manugrandio/small-code-exercises).
+
+Some other notes:
+
+- I received the existing code in a zip file, so I added all the contents to this repository.
+The initial commit contains the state of the code unmodified by me.
+I think one of the best ways to read my changes is through [this link](https://github.com/manugrandio/farms-task/compare/8a5eb16...HEAD) (diff between initial commit and HEAD).
+- I grouped related commits in pull requests and merged them to `main`.
+I tried to make make those commits as self-contained as possible, but there are small unrelated changes in some of them.
+- The description of this exercise said "jwt needs to be validated & checked against DB".
+I think I implemented JWT authentication correctly, but I could not understand why I had to "check it against DB", since JWT are self-contained and there's no need to store them in the database to check its validity and decode its contents.
+I saw there is a `AccessToken` entity, but since no description was provided, I couldn't figure out what to do with it.
+- I used `cropYield` as property name instead of `yield` because it's a reserved word in some scenarios.
+- I only added authentication to the endpoints I created (`/farm/`). I didn't add those to the rest of the endpoints (`/user/`) because I thought it was outside the scope of this task.
+- improvements:
+    - caching (or storing in database field) driving distance for "user - farm"; clear cache on user or farm address change; objective improve performance and reduce money spent
+    - pagination on farms list
+    - use factories in tests
+    - set `DISTANCE_MATRIX_TOKEN`
+- I used Distance Matrix to get coordinates and calculate driving distance.
+When doing the latter with multiple destinations I got an error `{ "status": "MAX_DIMENSIONS_EXCEEDED", "error_message": "Element limit exceeded in the request: 2 > 1." }`, so to get multiple driving distances I perform multiple requests.
+- Right before the delivery date of this exercise I discovered some mocks don't work when using `supertest`, so running tests that create a farm and get the list of farms calls the Distance Matrix API.
+Their failure is handled correctly and tests pass, but I think those are errors that have to be fixed.
+
+## Setup
+
+Apart from the setup described in the original README, remember to set the `DISTANCE_MATRIX_TOKEN` environment variable with your token.
+
 # recruitment-node-private 1.2.0
 
 This task is to implement a “feature” **based on the current setup**. Is not really about show off, but about deliver a solid piece of work.<br/>
