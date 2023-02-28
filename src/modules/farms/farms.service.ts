@@ -40,4 +40,9 @@ export class FarmsService {
     }
     return deleteResult;
   }
+
+  public async findFarms(): Promise<Farm[]> {
+    const farms = await this.farmsRepository.find({});
+    return farms;
+  }
 }
