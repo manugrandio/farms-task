@@ -50,7 +50,7 @@ export class AuthService {
   public async getUserFromToken(token: string): Promise<User | null> {
     let userData;
     try {
-      userData = verify(token, config.JWT_SECRET as string) as { id: string };
+      userData = verify(token, config.JWT_SECRET ) as { id: string };
     } catch {
       return null;
     }
