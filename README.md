@@ -11,17 +11,13 @@ Some other notes:
 The initial commit contains the state of the code unmodified by me.
 I think one of the best ways to read my changes is through [this link](https://github.com/manugrandio/farms-task/compare/8a5eb16...HEAD) (diff between initial commit and HEAD).
 - I grouped related commits in pull requests and merged them to `main`.
-I tried to make make those commits as self-contained as possible, but there are small unrelated changes in some of them.
+I tried to make those commits as self-contained as possible, but there are small unrelated changes in some of them.
 - The description of this exercise said "jwt needs to be validated & checked against DB".
 I think I implemented JWT authentication correctly, but I could not understand why I had to "check it against DB", since JWT are self-contained and there's no need to store them in the database to check its validity and decode its contents.
 I saw there is a `AccessToken` entity, but since no description was provided, I couldn't figure out what to do with it.
 - I used `cropYield` as property name instead of `yield` because it's a reserved word in some scenarios.
-- I only added authentication to the endpoints I created (`/farm/`). I didn't add those to the rest of the endpoints (`/user/`) because I thought it was outside the scope of this task.
-- improvements:
-    - caching (or storing in database field) driving distance for "user - farm"; clear cache on user or farm address change; objective improve performance and reduce money spent
-    - pagination on farms list
-    - use factories in tests
-    - set `DISTANCE_MATRIX_TOKEN`
+- I only added authentication to the endpoints I created (`/farm/`).
+I didn't add it to the rest of the endpoints (`/user/`) because I thought it was outside the scope of this task.
 - I used Distance Matrix to get coordinates and calculate driving distance.
 When doing the latter with multiple destinations I got an error `{ "status": "MAX_DIMENSIONS_EXCEEDED", "error_message": "Element limit exceeded in the request: 2 > 1." }`, so to get multiple driving distances I perform multiple requests.
 - Right before the delivery date of this exercise I discovered some mocks don't work when using `supertest`, so running tests that create a farm and get the list of farms calls the Distance Matrix API.
