@@ -2,16 +2,16 @@ import { DeepPartial, DeleteResult, FindOptionsWhere, Repository } from "typeorm
 import dataSource from "orm/orm.config";
 import { Farm } from "./entities/farm.entity";
 import { CreateFarmDto } from "./dto/create-farm.dto";
-import { Geocoding } from "services/geocoding.service";
+import { DistanceMatrix } from "services/distancematrix.service";
 import { NotFoundError } from "errors/errors";
 
 export class FarmsService {
   private readonly farmsRepository: Repository<Farm>;
-  private readonly geocoding: Geocoding;
+  private readonly distanceMatrix: DistanceMatrix;
 
-  constructor(geocoding?: Geocoding) {
+  constructor(distanceMatrix?: DistanceMatrix) {
     this.farmsRepository = dataSource.getRepository(Farm);
-    this.geocoding = geocoding || new Geocoding();
+    this.distanceMatrix = distanceMatrix || new DistanceMatrix();
   }
 
   public async findOneBy(param: FindOptionsWhere<Farm>): Promise<Farm | null> {
@@ -22,7 +22,7 @@ export class FarmsService {
     const { address } = data;
     let coordinatesStr;
     if (address !== undefined) {
-      const coordinates = await this.geocoding.getCoordinates(address);
+      const coordinates = await this.distanceMatrix.getCoordinates(address);
       if (coordinates !== null) {
         const { latitude, longitude } = coordinates;
         coordinatesStr = `(${latitude}, ${longitude})`;

@@ -11,7 +11,7 @@ import { CreateUserDto } from "../../users/dto/create-user.dto";
 import { CreateFarmDto } from "../dto/create-farm.dto";
 import { UsersService } from "../../users/users.service";
 import { FarmsService } from "../farms.service";
-import { Geocoding } from "services/geocoding.service";
+import { DistanceMatrix } from "services/distancematrix.service";
 import { CoordinatesDto } from "services/coordinates.dto";
 
 const createToken = (user: User, secret?: string): string => {
@@ -30,7 +30,7 @@ describe("FarmsController", () => {
   let app: Express;
   let agent: SuperAgentTest;
   let server: Server;
-  const geocodingService = new Geocoding();
+  const distanceMatrixService = new DistanceMatrix();
 
   let usersService: UsersService;
 
@@ -63,7 +63,7 @@ describe("FarmsController", () => {
         longitude: -75.2389501,
       }));
 
-    getCoordinatesMock = jest.spyOn(geocodingService, "getCoordinates");
+    getCoordinatesMock = jest.spyOn(distanceMatrixService, "getCoordinates");
     getCoordinatesMock.mockImplementation(mockedImplementation);
   });
 
@@ -133,7 +133,7 @@ describe("FarmsController", () => {
         cropYield: 200,
         user: user,
       };
-      const farmsService = new FarmsService(geocodingService);
+      const farmsService = new FarmsService(distanceMatrixService);
       const { id: farmId } = await farmsService.createFarm(createFarmDto);
 
       const res = await agent.delete(`/api/farms/${farmId}`)
@@ -181,7 +181,7 @@ describe("FarmsController", () => {
         cropYield: 500,
         user: user,
       };
-      const farmsService = new FarmsService(geocodingService);
+      const farmsService = new FarmsService(distanceMatrixService);
       await farmsService.createFarm(createFarmDtoOne);
       await farmsService.createFarm(createFarmDtoTwo);
 
