@@ -100,7 +100,7 @@ describe("FarmsService", () => {
     });
   });
 
-  describe(".findFarms", () => {
+  describe(".findAllFarms", () => {
     it("should list existing farms", async () => {
       const createUserDto: CreateUserDto = {
         email: "user@test.com",
@@ -127,10 +127,52 @@ describe("FarmsService", () => {
       await farmsService.createFarm(createFarmDtoOne);
       await farmsService.createFarm(createFarmDtoTwo);
 
-      const farms = await farmsService.findFarms();
+      const farms = await farmsService.findAllFarms();
 
       expect(farms).toHaveLength(2);
       expect(farms.map(farm => farm.name)).toEqual(expect.arrayContaining(["Schrute Farms", "Carrot Farms"]));
+    });
+  });
+
+  describe(".findOutliers", () => {
+    it("should list only outlier farms", async () => {
+      const createUserDto: CreateUserDto = {
+        email: "user@test.com",
+        password: "password",
+        address: "Test St. 12345",
+        coordinates: "(12.34, 56.78)",
+      };
+      const user = await usersService.createUser(createUserDto);
+      const createFarmDtoOne: CreateFarmDto = {
+        name: "Schrute Farms",
+        address: "10 Daniels Rd, Honesdale, PA 18431",
+        size: 10,
+        cropYield: 400,
+        user: user,
+      };
+      const createFarmDtoTwo: CreateFarmDto = {
+        name: "Carrot Farms",
+        address: "Test St. 1234",
+        size: 20,
+        cropYield: 600,
+        user: user,
+      };
+      const createFarmDtoThree: CreateFarmDto = {
+        name: "Potato Farms",
+        address: "Mock St. 789",
+        size: 20,
+        cropYield: 800,
+        user: user,
+      };
+      const farmsService = new FarmsService(distanceMatrixService);
+      await farmsService.createFarm(createFarmDtoOne);
+      await farmsService.createFarm(createFarmDtoTwo);
+      await farmsService.createFarm(createFarmDtoThree);
+
+      const farms = await farmsService.findOutliers();
+
+      expect(farms).toHaveLength(2);
+      expect(farms.map(farm => farm.cropYield)).toEqual(expect.arrayContaining([400, 800]));
     });
   });
 });

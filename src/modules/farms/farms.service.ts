@@ -5,6 +5,8 @@ import { CreateFarmDto } from "./dto/create-farm.dto";
 import { DistanceMatrix } from "services/distancematrix.service";
 import { NotFoundError } from "errors/errors";
 
+const OUTLIER_PERCENTAGE = 0.3;
+
 export class FarmsService {
   private readonly farmsRepository: Repository<Farm>;
   private readonly distanceMatrix: DistanceMatrix;
@@ -41,11 +43,38 @@ export class FarmsService {
     return deleteResult;
   }
 
-  public async findFarms(): Promise<Farm[]> {
+  public async findFarms(onlyOutliers: boolean): Promise<Farm[]> {
+    if (onlyOutliers) {
+      return this.findOutliers();
+    } else {
+      return this.findAllFarms();
+    }
+  }
+
+  public async findAllFarms(): Promise<Farm[]> {
     const farms = await this.farmsRepository
       .createQueryBuilder("farm")
       .leftJoinAndSelect("farm.user", "user")
-      .getMany()
+      .getMany();
+    return farms;
+  }
+
+  public async findOutliers(): Promise<Farm[]> {
+    const { avgYieldStr } = <{ avgYieldStr: string }>(await this.farmsRepository
+      .createQueryBuilder("farm")
+        .select("AVG(farm.cropYield)", "avgYieldStr")
+        .getRawOne());
+
+    const avgYield = Number(avgYieldStr);
+    const yieldBottom = Math.floor((1 - OUTLIER_PERCENTAGE) * avgYield);
+    const yieldTop = Math.floor((1 + OUTLIER_PERCENTAGE) * avgYield);
+
+    const farms = await this.farmsRepository
+      .createQueryBuilder("farm")
+      .leftJoinAndSelect("farm.user", "user")
+      .where("farm.cropYield < :yieldBottom", { yieldBottom })
+      .orWhere("farm.cropYield > :yieldTop", { yieldTop })
+      .getMany();
     return farms;
   }
 }

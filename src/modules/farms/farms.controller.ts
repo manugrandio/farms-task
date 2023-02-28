@@ -46,6 +46,7 @@ export class FarmsController {
     const { user } = req;
     const query = (<Request><unknown>req).query;
     const orderBy = query.orderBy;
+    const onlyOutliers = query.onlyOutliers === "true";
 
     let userCoordinates: Point | undefined;
     if (user?.coordinates !== undefined) {
@@ -54,7 +55,7 @@ export class FarmsController {
 
     let formattedFarms;
     try {
-      const farmsList = await this.farmsService.findFarms();
+      const farmsList = await this.farmsService.findFarms(onlyOutliers);
 
       formattedFarms = await Promise.all(
         farmsList.map(farm => instanceToPlain(FarmDto.createFromEntity(farm, userCoordinates)))
