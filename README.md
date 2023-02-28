@@ -2,7 +2,7 @@
 
 *Important*:
 
-- You can find the original contents of this README [below](#recruitment-node-private-1.2.0).
+- You can find the original contents of this README [below](#recruitment-node-private-120).
 - I moved the "Small Code Exercises" to a separate repo that you can find [here](https://github.com/manugrandio/small-code-exercises).
 
 Some other notes:
