@@ -6,6 +6,7 @@ import { RequestWithUser } from "middlewares/auth.interfaces";
 import { NotFoundError } from "errors/errors";
 import { instanceToPlain } from "class-transformer";
 import { Point } from "helpers/utils.interfaces";
+import { getSortFunction } from "./farms.helpers";
 
 export class FarmsController {
   private readonly farmsService: FarmsService;
@@ -43,20 +44,33 @@ export class FarmsController {
 
   public async list(req: RequestWithUser, res: Response, next: NextFunction) {
     const { user } = req;
+    const query = (<Request><unknown>req).query;
+    const orderBy = query.orderBy;
+
     let userCoordinates: Point | undefined;
     if (user?.coordinates !== undefined) {
       userCoordinates = <Point>(<unknown>user?.coordinates);
     }
 
+    let formattedFarms;
     try {
       const farmsList = await this.farmsService.findFarms();
 
-      const formattedFarms = await Promise.all(
+      formattedFarms = await Promise.all(
         farmsList.map(farm => instanceToPlain(FarmDto.createFromEntity(farm, userCoordinates)))
       );
-      res.status(202).send({ farms: formattedFarms });
+
     } catch (error) {
       next(error);
     }
+
+    if (formattedFarms && orderBy !== undefined) {
+      const sortFunction = getSortFunction(<string>orderBy);
+      if (sortFunction !== undefined) {
+        formattedFarms.sort(sortFunction);
+      }
+    }
+
+    res.status(202).send({ farms: formattedFarms });
   }
 }

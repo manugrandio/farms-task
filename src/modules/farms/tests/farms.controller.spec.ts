@@ -184,11 +184,18 @@ describe("FarmsController", () => {
       await farmsService.createFarm(createFarmDtoOne);
       await farmsService.createFarm(createFarmDtoTwo);
 
-      const response = await agent.get("/api/farms/list")
+      const response = await agent.get("/api/farms/list?orderBy=name")
         .set("Authorization", `Bearer ${token}`);
 
       expect(response.body).toEqual({
         farms: [
+          {
+            name: "Carrot Farms",
+            address: "Test St. 1234",
+            size: 20,
+            cropYield: 500,
+            owner: "user@test.com",
+          },
           {
             name: "Schrute Farms",
             address: "10 Daniels Rd, Honesdale, PA 18431",
@@ -196,13 +203,6 @@ describe("FarmsController", () => {
             cropYield: 200,
             owner: "user@test.com",
           },
-          {
-            name: "Carrot Farms",
-            address: "Test St. 1234",
-            size: 20,
-            cropYield: 500,
-            owner: "user@test.com",
-          }
         ]
       });
     });
