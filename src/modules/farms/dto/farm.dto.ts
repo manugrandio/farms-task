@@ -1,22 +1,31 @@
-import { Expose } from "class-transformer";
+import { Exclude, Expose } from "class-transformer";
 import { Farm } from "../entities/farm.entity";
+import { User } from "modules/users/entities/user.entity";
+import { Point } from "helpers/utils.interfaces";
+import { DistanceMatrix } from "services/distancematrix.service";
 
 export class FarmDto {
   constructor(partial?: Partial<FarmDto>) {
     Object.assign(this, partial);
   }
 
-  @Expose()
-  public readonly id: string;
+  @Exclude()
+  public id: string;
 
   @Expose()
   public name: string;
 
   @Expose()
-  public address?: string;
+  public owner: string;
 
   @Expose()
+  public address?: string;
+
+  @Exclude()
   public coordinates?: string;
+
+  @Exclude()
+  public user: User;
 
   @Expose()
   public size?: number;
@@ -24,11 +33,22 @@ export class FarmDto {
   @Expose()
   public cropYield?: number;
 
-  public static createFromEntity(farm: Farm | null): FarmDto | null {
-    if (!farm) {
+  @Expose()
+  public drivingDistance?: number;
+
+  public static async createFromEntity(farm: Farm | null, userCoordinates?: Point): Promise<FarmDto | null> {
+    if (farm === null) {
       return null;
     }
 
-    return new FarmDto({ ...farm });
+    let drivingDistance: number | undefined | null;
+    let farmCoordinates: Point | undefined;
+    if (userCoordinates !== undefined && farm.coordinates !== undefined) {
+      farmCoordinates = <Point>(<unknown>farm?.coordinates);
+      const distanceMatrixService = new DistanceMatrix();
+      drivingDistance = await distanceMatrixService.calculateDrivingDistance(userCoordinates, farmCoordinates);
+    }
+
+    return new FarmDto({ ...farm, drivingDistance: drivingDistance || undefined, owner: farm.user.email });
   }
 }

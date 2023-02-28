@@ -10,3 +10,15 @@ export interface CoordinatesPayload {
     }
   ];
 }
+
+export interface DrivingDistancePayload {
+  rows: [
+    {
+      elements: {
+        distance: {
+          value: number;
+        }
+      }
+    }
+  ]
+}

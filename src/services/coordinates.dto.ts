@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { CoordinatesPayload } from "./geocoding.interfaces";
+import { CoordinatesPayload } from "./distancematrix.interfaces";
 
 export class CoordinatesDto {
   constructor(coordinates: CoordinatesDto) {
