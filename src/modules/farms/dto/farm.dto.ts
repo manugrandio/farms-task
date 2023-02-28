@@ -43,7 +43,7 @@ export class FarmDto {
 
     let drivingDistance: number | undefined | null;
     let farmCoordinates: Point | undefined;
-    if (userCoordinates !== undefined && farm.coordinates !== undefined) {
+    if (userCoordinates !== undefined && userCoordinates !== null && farm.coordinates !== undefined) {
       farmCoordinates = <Point>(<unknown>farm?.coordinates);
       const distanceMatrixService = new DistanceMatrix();
       drivingDistance = await distanceMatrixService.calculateDrivingDistance(userCoordinates, farmCoordinates);
