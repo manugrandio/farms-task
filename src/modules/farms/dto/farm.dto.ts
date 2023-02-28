@@ -1,4 +1,4 @@
-import { Exclude, Expose } from "class-transformer";
+import { Exclude, Expose, Transform } from "class-transformer";
 import { Farm } from "../entities/farm.entity";
 import { User } from "modules/users/entities/user.entity";
 import { Point } from "helpers/utils.interfaces";
@@ -35,6 +35,10 @@ export class FarmDto {
 
   @Expose()
   public drivingDistance?: number;
+
+  @Transform(({ value }) => (value as Date).toISOString())
+  @Expose()
+  public createdAt: Date;
 
   public static async createFromEntity(farm: Farm | null, userCoordinates?: Point): Promise<FarmDto | null> {
     if (farm === null) {

@@ -3,6 +3,7 @@ import { FarmDto } from "./dto/farm.dto";
 export const getSortFunction = (orderBy: string) => {
   if (orderBy === "name") return sortByName;
   if (orderBy === "drivingDistance") return sortByDrivingDistance;
+  if (orderBy === "date") return sortByCreatedAt;
 }
 
 const sortByName = (farm1: FarmDto, farm2: FarmDto): number => {
@@ -10,6 +11,16 @@ const sortByName = (farm1: FarmDto, farm2: FarmDto): number => {
     return -1;
   }
   if (farm1.name > farm2.name) {
+    return 1;
+  }
+  return 0;
+};
+
+const sortByCreatedAt = (farm1: FarmDto, farm2: FarmDto): number => {
+  if (farm1.createdAt < farm2.createdAt) {
+    return -1;
+  }
+  if (farm1.createdAt > farm2.createdAt) {
     return 1;
   }
   return 0;

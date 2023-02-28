@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "../../users/entities/user.entity"
 
 @Entity()
@@ -23,4 +23,7 @@ export class Farm {
 
   @ManyToOne(() => User, (user) => user.farms)
   public user: User
+
+  @CreateDateColumn()
+  public createdAt: Date;
 }
