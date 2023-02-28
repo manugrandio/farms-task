@@ -6,17 +6,18 @@ import { Geocoding } from "services/geocoding.service";
 
 export class FarmsService {
   private readonly farmsRepository: Repository<Farm>;
+  private readonly geocoding: Geocoding;
 
-  constructor() {
+  constructor(geocoding?: Geocoding) {
     this.farmsRepository = dataSource.getRepository(Farm);
+    this.geocoding = geocoding || new Geocoding();
   }
 
   public async createFarm(data: CreateFarmDto): Promise<Farm> {
     const { address } = data;
     let coordinatesStr;
     if (address !== undefined) {
-      const geocoding = new Geocoding();
-      const coordinates = await geocoding.getCoordinates(address);
+      const coordinates = await this.geocoding.getCoordinates(address);
       if (coordinates !== null) {
         const { latitude, longitude } = coordinates;
         coordinatesStr = `(${latitude}, ${longitude})`;
