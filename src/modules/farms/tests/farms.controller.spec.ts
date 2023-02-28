@@ -195,6 +195,7 @@ describe("FarmsController", () => {
             size: 20,
             cropYield: 500,
             owner: "user@test.com",
+            createdAt: expect.any(String),
           },
           {
             name: "Schrute Farms",
@@ -202,6 +203,7 @@ describe("FarmsController", () => {
             size: 10,
             cropYield: 200,
             owner: "user@test.com",
+            createdAt: expect.any(String),
           },
         ]
       });
