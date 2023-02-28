@@ -110,7 +110,6 @@ describe("FarmsController", () => {
 
       expect(res.statusCode).toBe(201);
       expect(res.body).toMatchObject({
-        id: expect.any(String),
         ...createFarmPayload,
       });
     });

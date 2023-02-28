@@ -5,6 +5,7 @@ import { FarmsService } from "./farms.service";
 import { RequestWithUser } from "middlewares/auth.interfaces";
 import { NotFoundError } from "errors/errors";
 import { instanceToPlain } from "class-transformer";
+import { Point } from "helpers/utils.interfaces";
 
 export class FarmsController {
   private readonly farmsService: FarmsService;
@@ -20,7 +21,8 @@ export class FarmsController {
     } as CreateFarmDto;
     try {
       const farm = await this.farmsService.createFarm(createFarmDto);
-      res.status(201).send(FarmDto.createFromEntity(farm));
+      const plainFarm = instanceToPlain(await FarmDto.createFromEntity(farm));
+      res.status(201).send(plainFarm);
     } catch (error) {
       next(error);
     }
@@ -39,12 +41,20 @@ export class FarmsController {
     }
   }
 
-  public async list(_: Request, res: Response, next: NextFunction) {
+  public async list(req: RequestWithUser, res: Response, next: NextFunction) {
+    const { user } = req;
+    let userCoordinates: Point | undefined;
+    if (user?.coordinates !== undefined) {
+      userCoordinates = <Point>(<unknown>user?.coordinates);
+    }
+
     try {
       const farmsList = await this.farmsService.findFarms();
-      res.status(202).send({
-        farms: farmsList.map(farm => instanceToPlain(FarmDto.createFromEntity(farm)))
-      });
+
+      const formattedFarms = await Promise.all(
+        farmsList.map(farm => instanceToPlain(FarmDto.createFromEntity(farm, userCoordinates)))
+      );
+      res.status(202).send({ farms: formattedFarms });
     } catch (error) {
       next(error);
     }
