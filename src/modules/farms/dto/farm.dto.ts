@@ -1,4 +1,4 @@
-import { Expose } from "class-transformer";
+import { Exclude, Expose } from "class-transformer";
 import { Farm } from "../entities/farm.entity";
 
 export class FarmDto {
@@ -6,8 +6,8 @@ export class FarmDto {
     Object.assign(this, partial);
   }
 
-  @Expose()
-  public readonly id: string;
+  @Exclude()
+  public id: string;
 
   @Expose()
   public name: string;
@@ -15,7 +15,7 @@ export class FarmDto {
   @Expose()
   public address?: string;
 
-  @Expose()
+  @Exclude()
   public coordinates?: string;
 
   @Expose()

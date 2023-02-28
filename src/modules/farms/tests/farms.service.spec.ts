@@ -24,7 +24,6 @@ describe("FarmsService", () => {
     await disconnectAndClearDatabase(ds);
   });
 
-
   beforeEach(() => {
     const mockedImplementation = () =>
       Promise.resolve(new CoordinatesDto({

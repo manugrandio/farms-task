@@ -4,6 +4,7 @@ import { FarmDto } from "./dto/farm.dto";
 import { FarmsService } from "./farms.service";
 import { RequestWithUser } from "middlewares/auth.interfaces";
 import { NotFoundError } from "errors/errors";
+import { instanceToPlain } from "class-transformer";
 
 export class FarmsController {
   private readonly farmsService: FarmsService;
@@ -34,6 +35,17 @@ export class FarmsController {
       if (error instanceof NotFoundError) {
         res.status(404).send({ success: false });
       }
+      next(error);
+    }
+  }
+
+  public async list(_: Request, res: Response, next: NextFunction) {
+    try {
+      const farmsList = await this.farmsService.findFarms();
+      res.status(202).send({
+        farms: farmsList.map(farm => instanceToPlain(FarmDto.createFromEntity(farm)))
+      });
+    } catch (error) {
       next(error);
     }
   }
